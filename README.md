@@ -42,9 +42,11 @@ In this project, we introduce **DisCo** as a generalized referring human dance g
 
 
 
-#### It achieves:
+#### ✨Compared to existing works, DisCo achieves:
 
-- Current SOTA results for referring human dance generation, especially outperforming existing methods in terms of **generalizability to the real world scenarios**.
+- **Generalizability** to a large-scale real-world human **without human-specific fine-tuning** (We also support [human-specific fine-tuning](https://github.com/Wangt-CN/DisCo#human-specific-fine-tuning)). Previous methods only support generation for a specific domain of human, e.g., [DreamPose](https://github.com/johannakarras/DreamPose) only generate fashion model with easy catwalk pose.
+
+- Current **SOTA results** for referring human dance generation.
 
 - Extensive usage cases and applications (see [project page](https://disco-dance.github.io/index.html) for more details). 
 
@@ -52,10 +54,10 @@ In this project, we introduce **DisCo** as a generalized referring human dance g
 
   
 
-#### With this project, you can get:
+#### 🌟With this project, you can get:
 
 - *\[User\]*: Just try our online demo! Or deploy the model inference locally. 
-- *\[Researcher\]*: An easy-to-use codebase for re-implementation.
+- *\[Researcher\]*: An easy-to-use codebase for re-implementation and devleplment.
 - *\[Researcher\]*: A large amount of research directions for further improvement.
 
 
@@ -228,7 +230,8 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py \
 --local_train_batch_size 32 --local_eval_batch_size 32 --log_dir exp/human_specific_ft/ \
 --epochs 20 --deepspeed --eval_step 500 --save_step 500 --gradient_accumulate_steps 1 \
 --learning_rate 1e-3  --fix_dist_seed  --loss_target "noise" \
---unet_unfreeze_type "crossattn" --refer_sdvae --ref_null_caption False --combine_clip_local --combine_use_mask --conds "poses" "masks" \
+--unet_unfreeze_type "crossattn" \
+--refer_sdvae --ref_null_caption False --combine_clip_local --combine_use_mask --conds "poses" "masks" \
 --freeze_pose True --freeze_background False \
 --pretrained_model /path/to/the/ft_model_checkpoint \
 --ft_iters 500 --ft_one_ref_image False --ft_idx dataset/folder/name --strong_aug_stage1 True --strong_rand_stage2 True
