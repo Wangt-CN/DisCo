@@ -15,7 +15,7 @@
 ## :fire: News
 
 * **[2023.06.28]** We have released DisCo Human Attribute Pre-training Code.
-* **[2023.06.21]** DisCo Human Image Editing [Demo](https://a8b0b9c5d9ee9d6c62.gradio.live/) is released! Have a try!
+* **[2023.06.21]** DisCo Human Image Editing [Demo](https://d383ecc864f168ffb5.gradio.live/) is released! Have a try!
 * **[2023.06.21]** We release the human-specific fine-tuning [code](https://github.com/Wangt-CN/DisCo#human-specific-fine-tuning) for reference. Come and build your own specific dance model!
 * **[2023.06.21]**  Release the code for [general fine-tuning](https://github.com/Wangt-CN/DisCo#fine-tuning-with-disentangled-control).
 * **[2023.06.21]** We release the human attribute pre-trained checkpoint and the fine-tuning checkpoint.
