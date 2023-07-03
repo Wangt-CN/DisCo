@@ -1,6 +1,6 @@
 # DisCo: Disentangled Control for Referring Human Dance Generation in Real World
 
-<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://github.com/Wangt-CN/DisCo/blob/main/figures/DisCo.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://d383ecc864f168ffb5.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
+<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://github.com/Wangt-CN/DisCo/blob/main/figures/DisCo.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://5e42cfd7d54823fd8a.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
 
 [Tan Wang*](https://wangt-cn.github.io/),  [Linjie Li*](https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en),  [Kevin Lin*](https://scholar.google.com/citations?hl=en&user=LKSy1kwAAAAJ),  [Chung-Ching Lin](https://scholar.google.com/citations?hl=en&user=legkbM0AAAAJ),  [Zhengyuan Yang](https://scholar.google.com/citations?hl=en&user=rP02ve8AAAAJ),  [Hanwang Zhang](https://scholar.google.com/citations?hl=en&user=YG0DFyYAAAAJ),  [Zicheng Liu](https://scholar.google.com/citations?hl=en&user=bkALdvsAAAAJ),  [Lijuan Wang](https://scholar.google.com/citations?hl=en&user=cDcWXuIAAAAJ)
 
@@ -14,8 +14,10 @@
 
 ## :fire: News
 
+* **[2023.07.03]** Provide the local demo deployment [example code](https://github.com/Wangt-CN/DisCo#-demo). Now you can try our demo on you own dev machine!
+* **[2023.07.03]** We update the Pre-training [tsv data](https://github.com/Wangt-CN/DisCo#1-human-attribute-pre-training).
 * **[2023.06.28]** We have released DisCo Human Attribute Pre-training Code.
-* **[2023.06.21]** DisCo Human Image Editing [Demo](https://d383ecc864f168ffb5.gradio.live/) is released! Have a try!
+* **[2023.06.21]** DisCo Human Image Editing [Demo](https://5e42cfd7d54823fd8a.gradio.live/) is released! Have a try!
 * **[2023.06.21]** We release the human-specific fine-tuning [code](https://github.com/Wangt-CN/DisCo#human-specific-fine-tuning) for reference. Come and build your own specific dance model!
 * **[2023.06.21]**  Release the code for [general fine-tuning](https://github.com/Wangt-CN/DisCo#fine-tuning-with-disentangled-control).
 * **[2023.06.21]** We release the human attribute pre-trained checkpoint and the fine-tuning checkpoint.
@@ -25,12 +27,19 @@
 
 ## 🎨 DEMO 
 
-[[Online Gradio Demo]](https://d383ecc864f168ffb5.gradio.live/) (Video dance generation demo is on the way!)
+#### Launch Demo Locally (Video dance generation demo is on the way!)
+
+1. Download the [checkpoint model](https://github.com/Wangt-CN/DisCo#model-checkpoint-google-cloud-tiktok-training-data-fid-fvd-202--more-tiktok-style-training-data-fid-fvd-187) or use your own model.
+
+2. Run the [jupyter notebook](https://github.com/Wangt-CN/DisCo/blob/main/human_img_edit_gradio.ipynb) file (remember to revise the checkpoint path and args).
+
+   
+
+##### [[Online Gradio Demo]](https://5e42cfd7d54823fd8a.gradio.live/) 
 
 <p align="center">
   <img src="figures/demo.gif" width="90%" height="90%">
 </p>
-
 
 
 <br><br/>
@@ -89,9 +98,28 @@ pip install -v -U git+https://github.com/facebookresearch/xformers.git@main#egg=
 
 We create a human image subset (700K Images) filtered from existing image corpus for human attribute pre-training:
 
-| Dataset  | COCO (Single Person) | TikTok | DeepFashion2 | SHHQ-1.0 | LAION-Human |
-| -------- | :------------------: | :----: | :----------: | :------: | :---------: |
-| **Size** |         20K          |  90K   |     296K     |   40K    |    240K     |
+| Dataset  | COCO (Single Person) | TikTok Style | DeepFashion2 | SHHQ-1.0 | LAION-Human |
+| -------- | :------------------: | :----------: | :----------: | :------: | :---------: |
+| **Size** |         20K          |     124K     |     276K     |   40K    |    240K     |
+
+The pre-processed pre-training data with the efficient TSV data format can be downloaded [**here (Google Cloud)**](https://console.cloud.google.com/storage/browser/disco-data-share) [within `Human_Attribute_Pretrain` folder].
+
+```
+Data Root
+└── composite/
+    ├── train_xxx.yaml  # The path need to be then specified in the training args
+    └── val_xxx.yaml
+    ...
+└── TikTokDance/
+    ├── xxx_images.tsv
+    └── xxx_poses.tsv
+    ...
+└── coco/  
+    ├── xxx_images.tsv
+    └── xxx_poses.tsv
+```
+
+
 
 ##### 2. Fine-tuning with Disentangled Control
 
@@ -191,6 +219,10 @@ We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{
 bash gen_eval.sh {exp_dir_path} {exp_folder_name}
 ```
 
+##### Visualization:
+
+To run the visualization, just change `--do_train` to `--eval_visu` . You can also specify the visualization folder name with `'--eval_save_filename' xxx`.
+
 ##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 20.2)]( xxx) | [More TikTok-Style Training Data (FID-FVD: 18.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
 
 
@@ -212,6 +244,10 @@ We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{
 ```
 bash gen_eval.sh {exp_dir_path} {exp_folder_name}
 ```
+
+##### Visualization:
+
+To run the visualization, just change `--do_train` to `--eval_visu` . You can also specify the visualization folder name with `'--eval_save_filename' xxx`. (Remember to also specify the `--guidance_scale`)
 
 ##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 18.8)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_cfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data (FID-FVD: 15.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_cfg/mp_rank_00_model_states.pt)
 

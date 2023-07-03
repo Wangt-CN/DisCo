@@ -412,6 +412,20 @@ class Agent():
             use_tqdm=use_tqdm, enc_dec_only=enc_dec_only)
         logger.info('[Rank %s] Valid Time: %s\n %s' % (self.rank, eval_time, eval_meter.avg))
 
+    def eval_demo_pre(self):
+        if not self.pretrained_model:
+            logger.warning('You should create a new config file and specify pretrained_model in Args when using eval.')
+        # Wrap models before evaluating. This will support ddp evaluating.
+        self.move_model_to_cuda()
+        if self.args.dist:
+            self.prepare_dist_model()
+
+    def eval_demo_run_masked(self, input_batch, eval_dataset, enc_dec_only=False):
+        input_batch = eval_dataset.preprocess_masked_input(*input_batch)
+        output_image = self.eval_fn_demo(
+            input_batch, enc_dec_only=enc_dec_only)
+        return output_image
+
     def eval_fn(self, eval_loader, inner_collect_fn=None,
                 use_tqdm=True, compute_fid=True, enc_dec_only=False, train_eval_input=None):
         # TODO Note that eval_fn supports ddp. So we do not need to unwrap things here.
@@ -473,6 +487,43 @@ class Agent():
         self.model.train()
         return eval_meter, eval_time
 
+    def eval_fn_demo(self, input_batch, enc_dec_only=False):
+        self.model.eval()
+        with T.no_grad():
+            inputs = input_batch
+            T.cuda.empty_cache()
+            if enc_dec_only:
+                inputs['enc_dec_only'] = True
+            inputs = self.prepare_batch(inputs)
+            outputs = self.forward_step(inputs)
+
+            from PIL import Image
+            def tensor2pil(images, resize_img=False, img_target_size=None):
+                # c, h, w
+                images = images.cpu().permute(1, 2, 0).float().numpy()
+                if images.ndim == 3:
+                    images = images[None, ...]
+                images = (images * 255).round().astype("uint8")
+                if images.shape[-1] == 1:
+                    # special case for grayscale (single channel) images
+                    if resize_img:
+                        assert img_target_size is not None
+                        img_target_size = img_target_size.squeeze()
+                        pil_images = [Image.fromarray(image.squeeze(), mode="L").resize(img_target_size) for image in images]
+                    else:
+                        pil_images = [Image.fromarray(image.squeeze(), mode="L") for image in images]
+                else:
+                    if resize_img:
+                        assert img_target_size is not None
+                        img_target_size = img_target_size.squeeze()
+                        pil_images = [Image.fromarray(image).resize(img_target_size) for image in images]
+                    else:
+                        pil_images = [Image.fromarray(image) for image in images]
+
+                return pil_images
+
+            output_image = tensor2pil(outputs['logits_imgs'].squeeze(), resize_img=self.args.pos_resize_img, img_target_size=None)[0]
+        return output_image
 
 
     def get_eval_metrics(self, eval_meter, eval_save_filename, gt_save_path=None, pred_save_path=None):
