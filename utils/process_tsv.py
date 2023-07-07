@@ -2273,7 +2273,7 @@ class TSVTransformer(object):
     def Process(self, source_tsv, dst_tsv, row_processor):
         '''
         row_processor: a function whose input should be a list of tsv cols and
-                      whose return is also a list of tsv colums (will be saved into dst_tsv)
+                      whose return is also a list of tsv columns (will be saved into dst_tsv)
         '''
         self._row_processor = row_processor
         self._total_rows = 0
