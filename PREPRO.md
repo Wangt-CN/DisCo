@@ -43,7 +43,7 @@ python ./annotator/grounded-sam/run.py --dataset_root /path/to/target/dataset
 #### Installation
 
 ```
-# 1. Follow the official openpose website for package installation
+# 1. Follow the pytorch-openpose repo (https://github.com/Hzzone/pytorch-openpose) for package installation
 
 # 2. download the pre-trained weights
 wget -O body_pose_model.pth https://www.dropbox.com/sh/7xbup2qsn7vvjxo/AABaYNMvvNVFRWqyDXl7KQUxa/body_pose_model.pth?dl=1  
