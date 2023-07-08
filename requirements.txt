@@ -34,3 +34,4 @@ torchmetrics==0.6.0
 kornia==0.6
 clean-fid
 h5py
+gradio

@@ -29,13 +29,15 @@
 
 #### Launch Demo Locally (Video dance generation demo is on the way!)
 
-1. Download the [checkpoint model](https://github.com/Wangt-CN/DisCo#model-checkpoint-google-cloud-tiktok-training-data-fid-fvd-202--more-tiktok-style-training-data-fid-fvd-187) or use your own model.
+1. Download the fine-tuning checkpoint model (our demo uses this [checkpoint](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt), you can also try the model with [cfg](https://github.com/Wangt-CN/DisCo/tree/main#model-checkpoint-google-cloud-tiktok-training-data-fid-fvd-188--more-tiktok-style-training-data-fid-fvd-157)), or can also use your own model.
 
-2. Run the [jupyter notebook](https://github.com/Wangt-CN/DisCo/blob/main/human_img_edit_gradio.ipynb) file (remember to revise the checkpoint path and args).
+2. Run the [jupyter notebook](https://github.com/Wangt-CN/DisCo/blob/main/human_img_edit_gradio.ipynb) file. All the required code/command are already set up. Remember to revise the pretrained model path `--pretrained_model` in `manual_args = [xxx]`.
+
+3. After running, this jupyter will automatically launch the demo with your local dev GPU. You can visit the demo with the web link provided at the end of the notebook. 
 
    
 
-##### [[Online Gradio Demo]](https://5e42cfd7d54823fd8a.gradio.live/) 
+##### [[Online Gradio Demo]](https://5e42cfd7d54823fd8a.gradio.live/) (Temporal)
 
 <p align="center">
   <img src="figures/demo.gif" width="90%" height="90%">
@@ -179,11 +181,15 @@ AZFUSE_USE_FUSE=0 QD_USE_LINEIDX_8B=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetun
 
 
 
+<br><br/>
+
 #### 1. Modify the config file
 
 Download the `sd-image-variations-diffusers` from official [diffusers repo](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) and put it according to the config file `pretrained_model_path`. Or you can also choose to modify the `pretrained_model_path`.
 
 
+
+<br><br/>
 
 #### 2. w/o Classifier-Free Guidance (CFG)
 
@@ -211,6 +217,10 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf c
 --stage1_pretrain_path /path/to/pretrained_model_checkpoint/mp_rank_00_model_states.pt 
 ```
 
+To employ **multiple GPU running**, try to add `mpirun -np {GPU NUM}` before the `python`.
+
+
+
 **Evaluation:**
 
 We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{exp_folder_name})
@@ -219,13 +229,19 @@ We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{
 bash gen_eval.sh {exp_dir_path} {exp_folder_name}
 ```
 
+
+
 ##### Visualization:
 
 To run the visualization, just change `--do_train` to `--eval_visu` . You can also specify the visualization folder name with `'--eval_save_filename' xxx`.
 
-##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 20.2)]( xxx) | [More TikTok-Style Training Data (FID-FVD: 18.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
 
 
+##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 20.2)]( https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_nocfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data (FID-FVD: 18.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
+
+
+
+<br><br/>
 
 
 #### 3. w/ Classifier-Free Guidance (CFG) [CFG can bring a slightly better results]
