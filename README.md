@@ -1,6 +1,6 @@
 # DisCo: Disentangled Control for Referring Human Dance Generation in Real World
 
-<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://github.com/Wangt-CN/DisCo/blob/main/figures/DisCo.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://b9652ca65fb3fab63a.gradio.live/><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
+<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://github.com/Wangt-CN/DisCo/blob/main/figures/DisCo.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://b9652ca65fb3fab63a.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
 
 [Tan Wang*](https://wangt-cn.github.io/),  [Linjie Li*](https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en),  [Kevin Lin*](https://scholar.google.com/citations?hl=en&user=LKSy1kwAAAAJ),  [Chung-Ching Lin](https://scholar.google.com/citations?hl=en&user=legkbM0AAAAJ),  [Zhengyuan Yang](https://scholar.google.com/citations?hl=en&user=rP02ve8AAAAJ),  [Hanwang Zhang](https://scholar.google.com/citations?hl=en&user=YG0DFyYAAAAJ),  [Zicheng Liu](https://scholar.google.com/citations?hl=en&user=bkALdvsAAAAJ),  [Lijuan Wang](https://scholar.google.com/citations?hl=en&user=cDcWXuIAAAAJ)
 
@@ -23,7 +23,6 @@
 * **[2023.06.21]**  Release the code for [general fine-tuning](https://github.com/Wangt-CN/DisCo#fine-tuning-with-disentangled-control).
 * **[2023.06.21]** We release the human attribute pre-trained checkpoint and the fine-tuning checkpoint.
 
-
 <br><br/>
 
 ## 🎨 Gradio Demo 
@@ -38,7 +37,7 @@
 
 4. Or you can refer to our deployment with Colab [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing). All the code are deployed from scratch!
 
-   
+   <br><br/>
 
 ##### [[Online Gradio Demo]](https://b9652ca65fb3fab63a.gradio.live/) (Temporal)
 
@@ -192,7 +191,7 @@ Download the `sd-image-variations-diffusers` from official [diffusers repo](http
 
 
 
-<br><br/>
+
 
 #### 2. w/o Classifier-Free Guidance (CFG)
 
@@ -244,7 +243,7 @@ To run the visualization, just change `--do_train` to `--eval_visu` . You can al
 
 
 
-<br><br/>
+
 
 
 #### 3. w/ Classifier-Free Guidance (CFG) [CFG can bring a slightly better results]
