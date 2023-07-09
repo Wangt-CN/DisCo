@@ -102,12 +102,9 @@ class BaseDataset(Dataset):
         assert split == 'val'
 
         # for specific choose the video
-        ref_fg_folder = '/path/to/folder/demo_data/fg'
-        ref_bg_folder = '/path/to/folder/demo_data/bg'
-        ref_pose_folder = '/path/to/folder/demo_data/pose'
-        # ref_fg_folder = '/home1/wangtan/code/ms_internship2/github_repo/DisCo/demo_data/fg'
-        # ref_bg_folder = '/home1/wangtan/code/ms_internship2/github_repo/DisCo/demo_data/bg'
-        # ref_pose_folder = '/home1/wangtan/code/ms_internship2/github_repo/DisCo/demo_data/pose'
+        ref_fg_folder = './demo_data/fg'
+        ref_bg_folder = './demo_data/bg'
+        ref_pose_folder = './demo_data/pose'
         bg_list = os.listdir(os.path.join(ref_bg_folder, 'images'))
 
 
