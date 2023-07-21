@@ -55,3 +55,53 @@ wget -O body_pose_model.pth https://www.dropbox.com/sh/7xbup2qsn7vvjxo/AABaYNMvv
 python ./annotator/openpose/run.py --dataset_root /path/to/target/dataset
 ```
 
+
+
+
+
+### TSV preparation
+
+After running Grounded SAM and OpenPose, prepare the data structured as below:
+
+```
+Target Dataset
+└── 001/
+    ├── 0000.png
+    ├── 0001.png
+    ├── ...
+    ├────── groundsam
+    |       ├── 000001.png.mask.jpg
+    |       ├── 000002.png.mask.jpg
+    |       └── ...     
+    └────── openpose_json
+            ├── 000001.png.json
+            ├── 000002.png.json
+            └── ...
+└── 002/
+    ├── 0000.png
+    ├── 0001.png
+    ├── ...
+    ├────── groundsam
+    |       ├── 000001.png.mask.jpg
+    |       ├── 000002.png.mask.jpg
+    |       └── ...     
+    └────── openpose_json
+            ├── 000001.png.json
+            ├── 000002.png.json
+            └── ...
+```
+
+We also provide a preprocessed toy dataset as example. You may find the example dataset in folder `./tsv_example/toy_dataset`
+
+Run the following script to convert your dataset to tsv format
+
+```
+python ./tsv_example/create_custom_dataset_tsvs.py --split train --root_folder PATH_TO_YOUR_DATASET_FOLDER --output_folder PATH_TO_DESIRED_FOLDER 
+```
+
+For instance, `PATH_TO_YOUR_DATASET_FOLDER=./tsv_example/toy_dataset` and `PATH_TO_DESIRED_FOLDER=./tsv_example/toy_dataset/tsv`
+
+
+### TSV visualization
+
+Once the tsv files are generated, we provide a jupyter notebook for data visualization. Please refer to `visualize_tsv.ipynb` for details.

@@ -1,0 +1,5 @@
+composite: false
+img: train_img.tsv
+masks: train_masks.tsv
+poses: train_poses.tsv
+vid2line: train_vid2line.tsv

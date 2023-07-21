@@ -14,6 +14,7 @@
 
 ## :fire: News
 
+* **[2023.07.21]** Update the [construction guide](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) of the TSV file.
 * **[2023.07.08]** Update the [Colab](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) Demo (make sure our code/demo can be run on any machine)!
 * **[2023.07.03]** Provide the local demo deployment [example code](https://github.com/Wangt-CN/DisCo#-demo). Now you can try our demo on you own dev machine!
 * **[2023.07.03]** We update the Pre-training [tsv data](https://github.com/Wangt-CN/DisCo#1-human-attribute-pre-training).
@@ -144,6 +145,8 @@ Data Root
     └── xxx_poses.tsv
     ...
 ```
+
+*PS: If you want to use your own data resource but with our TSV data structure, please follow [PREPRO.MD](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) for reference. 
 
 <br><br/>
 
@@ -284,6 +287,8 @@ To run the visualization, just change `--do_train` to `--eval_visu` . You can al
 - Prepare a human-specific video or a set of human images
 
 - Use Grounded-SAM and OpenPose to obtain human mask and human skeleton for each training image (See [PREPRO.MD](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) for more details)
+
+- For human-specific fine-tuning, we recommend to directly use raw image/mask/pose for training rather than build TSV file. If you still want to use TSV file structure to prepare your data,  please follow [PREPRO.MD](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) for reference.
 
   
 
