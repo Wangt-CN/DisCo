@@ -8,6 +8,7 @@
 ## support FID-K(Gassian Blur), IS, FID-Img(from video to image), FID-ViD(3DRN50), FVD(Inception3D)
 '''
 import sys
+from pathlib import Path
 
 import os
 import random
@@ -28,7 +29,7 @@ pythonpath = os.path.abspath(
 print(pythonpath)
 sys.path.insert(0, pythonpath)
 from tool.metrics.utils import ResizeDataset, EXTENSIONS, ResizeDatasetBlur, ResizeDatasetInceptionScoreBlur, ResizeDatasetFIDVideoBlur
-from tool.metrics.utils import DatasetFVDVideoResize
+from tool.metrics.utils import DatasetFVDVideoResize, DatasetFVDVideoFromFramesResize
 from tool.metrics.features import build_feature_extractor, get_reference_statistics
 from tool.metrics.resize import build_resizer
 from tool.metrics.ssim_l1_lpips_psnr import compute_ssim_l1_psnr, compute_lpips
@@ -548,12 +549,18 @@ def compute_fid_video_scores(gen_inst_name_full, gt_inst_name_full, feat_model, 
     else:
         raise NotImplementedError
     
-    # dataset_gen = DatasetFVDVideo(gen_inst_name_full, sample_duration, mode, sample_size)
-    dataset_gen = DatasetFVDVideoResize(gen_inst_name_full, sample_duration, mode, sample_size)
+    if Path(gen_inst_name_full[0]).suffix in [".mp4", ".gif"]:
+        dataset_gen = DatasetFVDVideoResize(gen_inst_name_full, sample_duration, mode, sample_size)
+    else:
+        dataset_gen = DatasetFVDVideoFromFramesResize(gen_inst_name_full, sample_duration, mode, sample_size)
+
     np_feats_gen = compute_3d_video_prediction(dataset_gen, feat_model, batch_size=batch_size, num_workers=num_workers)
 
-    # dataset_gt = DatasetFVDVideo(gt_inst_name_full, sample_duration, mode, sample_size)
-    dataset_gt = DatasetFVDVideoResize(gt_inst_name_full, sample_duration, mode, sample_size)
+    if Path(gt_inst_name_full[0]).suffix in [".mp4", ".gif"]:
+        dataset_gt = DatasetFVDVideoResize(gt_inst_name_full, sample_duration, mode, sample_size)
+    else:
+        dataset_gt = DatasetFVDVideoFromFramesResize(gt_inst_name_full, sample_duration, mode, sample_size)
+
     np_feats_gt = compute_3d_video_prediction(dataset_gt, feat_model, batch_size=batch_size, num_workers=num_workers)
     if mode == 'MAE':
         fid_score = np.abs((np_feats_gen - np_feats_gt)).mean()
@@ -692,8 +699,8 @@ def get_all_eval_scores(
                 print(f"Empty gen/gt folder {path_gen}, {path_gt}")
                 break
             if len(gen_inst_names_v) == 0:
-                gen_inst_names_v = glob.glob(f"{path_gen}/*.gif")
-                gt_inst_names_v = glob.glob(f"{path_gt}/*.gif")
+                gen_inst_names_v = glob.glob(f"{path_gen}/*.gif") + glob.glob(f"{path_gen}/*.mp4") + glob.glob(f"{path_gen}/*.png") + glob.glob(f"{path_gen}/*.jpg") 
+                gt_inst_names_v = glob.glob(f"{path_gt}/*.gif") + glob.glob(f"{path_gt}/*.mp4") + glob.glob(f"{path_gt}/*.png") + glob.glob(f"{path_gt}/*.jpg")
                 gen_inst_names_v = [osp.basename(gen_inst) for gen_inst in gen_inst_names_v]
                 gen_inst_names_v.sort()
                 gt_inst_names_v = [osp.basename(gt_inst) for gt_inst in gt_inst_names_v]

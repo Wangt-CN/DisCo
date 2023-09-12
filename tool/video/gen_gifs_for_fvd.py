@@ -14,7 +14,7 @@ print(pythonpath)
 sys.path.insert(0, pythonpath)
 
 class Preprocess(threading.Thread):
-    def __init__(self, data, begin_idx, end_idx, gif_root, frames_len, fps, use_tqdm=False, overwrite=False):
+    def __init__(self, data, begin_idx, end_idx, gif_root, frames_len, fps, use_tqdm=False, overwrite=False, format="gif"):
         threading.Thread.__init__(self)
         self.data = data
         self.begin_idx = begin_idx
@@ -25,6 +25,7 @@ class Preprocess(threading.Thread):
         self.fps = fps
         self.end_idx =  self.end_idx - self.frames_len
         self.overwrite = overwrite
+        self.format = format
 
     def run(self):
         vid = "_".join(os.path.splitext(os.path.basename(self.data[0]))[0].split("_")[:2])
@@ -43,13 +44,21 @@ class Preprocess(threading.Thread):
                 except Exception as e:
                     print(e, f"curr_idx:{idx+i}", f"begin_idx:{self.begin_idx}", f"end_idx:{self.end_idx}", f"data_len: {len(self.data)}")
                 images.append(image)
-            imageio.mimsave(os.path.join(self.gif_root, f'{base_name}.gif'), images, fps=self.fps)
+
+            if self.format == "gif":
+                imageio.mimsave(os.path.join(self.gif_root, f'{base_name}.gif'), images, fps=self.fps)
+            elif self.format == "mp4":
+                # imageio.mimsave(os.path.join(self.gif_root, f'{base_name}.mp4'), images, fps=self.fps)
+                imageio.mimsave(os.path.join(self.gif_root, f'{base_name}.mp4'), images, fps=self.fps, quality=10, macro_block_size=None)
+            else:
+                raise NotImplementedError
 
 
-def compose_gif(img_path, gif_frames, fps, num_workers, overwrite=False):
+def compose_gif(img_path, gif_frames, fps, num_workers, overwrite=False, format="gif"):
     if img_path[-1] == "/":
         img_path = img_path[:-1]
-    base = os.path.basename(img_path) + "_gif"
+    suffix = f"_{format}" if gif_frames == 16 else f"_{gif_frames}frames{format}"
+    base = os.path.basename(img_path) + suffix
     root = os.path.dirname(img_path)
     gif_root = os.path.join(root, base)
     if not os.path.exists(gif_root):
@@ -74,7 +83,7 @@ def compose_gif(img_path, gif_frames, fps, num_workers, overwrite=False):
             pool.append(
                 Preprocess(
                     inst_paths, begin_idx, end_idx, gif_root,
-                    gif_frames, fps, idx==0, overwrite=overwrite))
+                    gif_frames, fps, idx==0, overwrite=overwrite, format=format))
             cur_idx = end_idx
 
         for idx in range(num_workers):
@@ -98,6 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--gif_fps', type=float, default=1.6)
     parser.add_argument('--overwrite', type=bool, default=False)
     parser.add_argument('--num_workers', type=int, default=16)
+    parser.add_argument("--format", type=str, default="mp4", choices=["gif", "mp4"])
 
     args = parser.parse_args()
 
@@ -107,8 +117,8 @@ if __name__ == "__main__":
         args.path_gt = os.path.join(args.root_dir, args.path_gt)
     print(f"compose_gif for pred")
     path_gen_gif = compose_gif(args.path_gen, args.gif_frames,
-        args.gif_fps, args.num_workers, overwrite=args.overwrite)
+        args.gif_fps, args.num_workers, overwrite=args.overwrite, format=args.format)
     print(f"compose_gif for gt")
     path_gt_gif = compose_gif(args.path_gt, args.gif_frames,
-        args.gif_fps, args.num_workers, overwrite=args.overwrite)
+        args.gif_fps, args.num_workers, overwrite=args.overwrite, format=args.format)
     print(path_gen_gif, path_gt_gif)

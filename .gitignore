@@ -65,3 +65,9 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# dirs
+/save_results
+/pretrain_model
+/command
+/cocoapi

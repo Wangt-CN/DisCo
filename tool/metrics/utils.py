@@ -1,13 +1,16 @@
+import re
 import os
+from pathlib import Path
 from random import gauss
 import numpy as np
 import torch
 import torchvision
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageSequence
 import cv2
 import torch.nn.functional as F
 import ffmpeg
 import random
+import imageio
 
 from tool.metrics.resize import build_resizer, make_resizer
 
@@ -325,6 +328,21 @@ class DatasetFVDVideo(torch.utils.data.Dataset):
         return video
 
 
+def save_video_from_numpy_array(array, output_filename, fps=3):
+    assert array.dtype == 'uint8', "The input array must be of dtype uint8"
+
+    with imageio.get_writer(output_filename, fps=fps) as writer:
+        for frame in array:
+            writer.append_data(frame)
+
+
+def gif_to_nparray(gif_path):
+    gif = Image.open(gif_path)
+    frames = [np.array(frame.copy().convert('RGB'), dtype=np.uint8) for frame in ImageSequence.Iterator(gif)]
+    video = np.stack(frames)
+    return video
+
+
 class DatasetFVDVideoResize(torch.utils.data.Dataset):
     """
     A placeholder Dataset that enables parallelizing the resize operation
@@ -350,12 +368,15 @@ class DatasetFVDVideoResize(torch.utils.data.Dataset):
         try:
             path = str(self.files[i])
 
-            probe = ffmpeg.probe(path)
-            video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
-            width = int(video_stream['width'])
-            height = int(video_stream['height'])
-            out, _ = (ffmpeg.input(path).output('pipe:', format='rawvideo', pix_fmt='rgb24').run(capture_stdout=True, quiet=True))
-            video = np.frombuffer(out, np.uint8).reshape([-1, height, width, 3])
+            if Path(path).suffix == '.gif':
+                video = gif_to_nparray(path)
+            else:
+                probe = ffmpeg.probe(path)
+                video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
+                width = int(video_stream['width'])
+                height = int(video_stream['height'])
+                out, _ = (ffmpeg.input(path).output('pipe:', format='rawvideo', pix_fmt='rgb24').run(capture_stdout=True, quiet=True))
+                video = np.frombuffer(out, np.uint8).reshape([-1, height, width, 3])
 
             #if video.shape[0] != 10:
             #    print('not 10, but', video.shape[0])
@@ -398,6 +419,95 @@ class DatasetFVDVideoResize(torch.utils.data.Dataset):
         except Exception as e:
             print(f'{i} skipped beacase {e}')
             return self.__getitem__(np.random.randint(0, self.__len__() - 1))
+
+
+class DatasetFVDVideoFromFramesResize(torch.utils.data.Dataset):
+    """
+    A placeholder Dataset that enables parallelizing the resize operation
+    using multiple CPU cores
+
+    files: list of all frame files in the folder
+    fn_resize: function that takes an np_array as input [0,255]
+    """
+
+    def __init__(self, files, sample_duration=16, mode='FVD-3DRN50', img_size=112):
+        frame_format1 = r"^(TiktokDance_\d+_)(\d+)(\D*\.\w+)$"
+        frame_format2 = r"^(TiktokDance_\d+_\d+_1x1_)(\d+)(\D*\.\w+)$"
+
+        # self.files = files
+        files = sorted(files)
+        self.video_frames = {}
+        for file in files:
+            file_name = Path(file).name
+            file_parent = Path(file).parent
+            if re.match(frame_format1, file_name):
+                folder_format_re = frame_format1
+            elif re.match(frame_format2, file_name):
+                folder_format_re = frame_format2
+            else:
+                print(f"Frame name '{file_name}' does not match any format")
+                continue
+        
+            match = re.match(folder_format_re, file_name)
+            frame_index = int(match.group(2))
+
+            self.video_frames[file_name] = [file]
+            for i in range(1, sample_duration):
+                next_frame_file_name = match.group(1) + str(frame_index + i).zfill(len(match.group(2))) + match.group(3)
+                next_frame_file_path = Path(file_parent, next_frame_file_name)
+                if not next_frame_file_path.exists():
+                    del self.video_frames[file_name]
+                    break
+                self.video_frames[file_name].append(next_frame_file_path.as_posix())
+
+        self.pixel_mean = torch.as_tensor(np.array([114.7748, 107.7354, 99.4750]))
+        self.img_size = img_size
+        self.sample_duration = sample_duration
+        self.mode = mode
+        self.resize_func = make_resizer("PIL", False, "bicubic", (img_size, img_size))
+ 
+    def __len__(self):
+        return len(self.video_frames)
+
+    def __getitem__(self, i):
+        try:
+            video_name = list(self.video_frames.keys())[i]
+            frame_list = []
+            for frame_path in self.video_frames[video_name]:
+                frame = Image.open(frame_path).convert('RGB')
+                frame_list.append(np.array(frame))
+            video = np.stack(frame_list, axis=0)
+
+            video_resize = []
+            for vim in video:
+                vim_resize = self.resize_func(vim)
+                video_resize.append(vim_resize)
+
+            video = np.stack(video_resize, axis=0)
+            # import ipdb; ipdb.set_trace()
+            video = torch.as_tensor(video.copy()).float()
+            num_v = video.shape[0]
+
+            if num_v % self.sample_duration != 0 and self.mode == "FVD-3DRN50":
+                num_v_ag = self.sample_duration - num_v % self.sample_duration
+                video_aug = video[[-1], :, :, :].repeat(num_v_ag, 1, 1, 1)
+                video = torch.cat([video, video_aug], dim=0)
+                num_seg = num_v // self.sample_duration + 1
+            else:
+                num_seg = num_v // self.sample_duration
+
+            if self.mode == 'FVD-3DRN50':
+                video = video - self.pixel_mean
+                video = video.view(num_seg, self.sample_duration, self.img_size, self.img_size, 3).contiguous().permute(0, 4, 1, 2, 3).float()
+            elif self.mode == "FVD-3DInception" or self.mode == 'MAE':
+                video = video / 127.5 - 1
+                video = video.unsqueeze(0).permute(0, 4, 1, 2, 3).float()  # num_seg, 3, sample_during h, w
+
+            return video
+        except Exception as e:
+            print(f'{i} skipped beacase {e}')
+            return self.__getitem__(np.random.randint(0, self.__len__() - 1))
+
 
 
 EXTENSIONS = {'bmp', 'jpg', 'jpeg', 'pgm', 'png', 'ppm',

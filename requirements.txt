@@ -4,8 +4,8 @@ opencv-python
 timm
 ftfy==6.0.3
 tensorboardX==2.4.1
-pycocotools==2.0.4
-pycocoevalcap==1.2
+# pycocotools==2.0.4
+# pycocoevalcap==1.2
 datasets
 rouge_score
 omegaconf
@@ -35,3 +35,5 @@ kornia==0.6
 clean-fid
 h5py
 gradio
+pytorch-fid
+lpips
