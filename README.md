@@ -1,10 +1,10 @@
-# DisCo: Disentangled Control for Referring Human Dance Generation in Real World
+# DisCo: Disentangled Control for Realistic Human Dance Generation
 
 <a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://github.com/Wangt-CN/DisCo/blob/main/figures/DisCo.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://b9652ca65fb3fab63a.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
 
-[Tan Wang*](https://wangt-cn.github.io/),  [Linjie Li*](https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en),  [Kevin Lin*](https://scholar.google.com/citations?hl=en&user=LKSy1kwAAAAJ),  [Chung-Ching Lin](https://scholar.google.com/citations?hl=en&user=legkbM0AAAAJ),  [Zhengyuan Yang](https://scholar.google.com/citations?hl=en&user=rP02ve8AAAAJ),  [Hanwang Zhang](https://scholar.google.com/citations?hl=en&user=YG0DFyYAAAAJ),  [Zicheng Liu](https://scholar.google.com/citations?hl=en&user=bkALdvsAAAAJ),  [Lijuan Wang](https://scholar.google.com/citations?hl=en&user=cDcWXuIAAAAJ)
+[Tan Wang*](https://wangt-cn.github.io/),  [Linjie Li*](https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en),  [Kevin Lin*](https://scholar.google.com/citations?hl=en&user=LKSy1kwAAAAJ),  [Yuanhao Zhai](https://www.yhzhai.com/), [Chung-Ching Lin](https://scholar.google.com/citations?hl=en&user=legkbM0AAAAJ),  [Zhengyuan Yang](https://scholar.google.com/citations?hl=en&user=rP02ve8AAAAJ),  [Hanwang Zhang](https://scholar.google.com/citations?hl=en&user=YG0DFyYAAAAJ),  [Zicheng Liu](https://scholar.google.com/citations?hl=en&user=bkALdvsAAAAJ),  [Lijuan Wang](https://scholar.google.com/citations?hl=en&user=cDcWXuIAAAAJ)
 
-**Nanyang Technological University  |  Microsoft Azure AI**
+**Nanyang Technological University  &nbsp; | &nbsp;  Microsoft Azure AI &nbsp; |&nbsp;  University at Buffalo**
 
 [![DisCo: Disentangled Control for Referring Human Dance Generation in Real World](https://res.cloudinary.com/marcomontalbano/image/upload/v1686644061/video_to_markdown/images/youtube--alJKsj3JpBo-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/alJKsj3JpBo "DisCo: Disentangled Control for Referring Human Dance Generation in Real World")
 
@@ -13,7 +13,7 @@
 <br><br/>
 
 ## :fire: News
-
+* **[2023.10.12]** Update the new ArXiv version of DisCo (Add temporal module ; Synchronize FVD computation with MCVD ; More baselines and visualizations, etc)
 * **[2023.07.21]** Update the [construction guide](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) of the TSV file.
 * **[2023.07.08]** Update the [Colab](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) Demo (make sure our code/demo can be run on any machine)!
 * **[2023.07.03]** Provide the local demo deployment [example code](https://github.com/Wangt-CN/DisCo#-demo). Now you can try our demo on you own dev machine!
@@ -84,6 +84,7 @@ In this project, we introduce **DisCo** as a generalized referring human dance g
 ### Installation
 
 ```sh
+## after py3.8 env initialization
 pip install --user torch==1.12.1+cu113 torchvision==0.13.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
 pip install --user progressbar psutil pymongo simplejson yacs boto3 pyyaml ete3 easydict deprecated future django orderedset python-magic datasets h5py omegaconf einops ipdb
 pip install --user --exists-action w -r requirements.txt
@@ -93,6 +94,9 @@ pip install git+https://github.com/microsoft/azfuse.git
 ## for acceleration
 pip install --user deepspeed==0.6.3
 pip install -v -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers
+
+## you may need to downgrade prototbuf to 3.20.x
+pip install protobuf==3.20.0
 ```
 
 
@@ -202,6 +206,8 @@ Download the `sd-image-variations-diffusers` from official [diffusers repo](http
 
 [*To enable WANDB, set up the wandb key in `utils/lib.py`]
 
+[*To employ **multiple GPU running**, try to add `mpirun -np {GPU NUM}` before the `python`.]
+
 ```python
 AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf config/ref_attn_clip_combine_controlnet/tiktok_S256L16_xformers_tsv.py \
 --do_train --root_dir /home1/wangtan/code/ms_internship2/github_repo/run_test \ 
@@ -222,17 +228,7 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf c
 --stage1_pretrain_path /path/to/pretrained_model_checkpoint/mp_rank_00_model_states.pt 
 ```
 
-*To employ **multiple GPU running**, try to add `mpirun -np {GPU NUM}` before the `python`.
 
-
-
-**Evaluation:**
-
-We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{exp_folder_name})
-
-```
-bash gen_eval.sh {exp_dir_path} {exp_folder_name}
-```
 
 
 
@@ -242,7 +238,20 @@ To run the visualization, just change `--do_train` to `--eval_visu` . You can al
 
 
 
-##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 20.2)]( https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_nocfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data (FID-FVD: 18.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
+**Evaluation:**
+
+You first need to run the evaluation to get the results. Then we use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{prediction_folder_name}
+
+```
+bash gen_eval.sh {exp_dir_path} {exp_dir_path}/{prediction_folder_name}
+```
+For example, 
+```
+bash gen_eval.sh /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_check /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_check/pred_gs1.5_scale-cond1.0-ref1.0/
+```
+
+
+##### Model Checkpoint (Google Cloud): [TikTok Training Data]( https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_nocfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
 
 
 
@@ -258,20 +267,25 @@ To run the visualization, just change `--do_train` to `--eval_visu` . You can al
 --guidance_scale 1.5 # the scale of the CFG
 ```
 
-**Evaluation:**
-
-We use `gen_eval.sh` to one-stop get the evaluation metrics for {exp_dir_path}/{exp_folder_name})
-
-```
-bash gen_eval.sh {exp_dir_path} {exp_folder_name}
-```
-
 **Visualization:**
 
 To run the visualization, just change `--do_train` to `--eval_visu` . You can also specify the visualization folder name with `'--eval_save_filename' xxx`. (Remember to also specify the `--guidance_scale`)
 
-##### Model Checkpoint (Google Cloud): [TikTok Training Data (FID-FVD: 18.8)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_cfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data (FID-FVD: 15.7)](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_cfg/mp_rank_00_model_states.pt)
+You can also check our command bash file `config/command_bash/tiktok_cfg.sh` for reference.
 
+
+**Evaluation:**
+Same with above
+
+
+
+##### Model Checkpoint (Google Cloud): [TikTok Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_cfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_cfg/mp_rank_00_model_states.pt)
+
+
+
+#### 4. Possible issue for FVD metric reproduction
+
+Please first check the github issue and response [here](https://github.com/Wangt-CN/DisCo/issues/25#issuecomment-1716394151). We have validated the checkpoint results on A100 GPU. If you still cannot reproduce the results, please open an issue or send me the email.
 
 
 <br><br/>
