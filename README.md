@@ -199,7 +199,7 @@ Download the `sd-image-variations-diffusers` from official [diffusers repo](http
 
 
 
-
+<br><br/>
 #### 2. w/o Classifier-Free Guidance (CFG)
 
 **Training:**
@@ -257,7 +257,7 @@ bash gen_eval.sh /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_
 
 
 
-
+<br><br/>
 #### 3. w/ Classifier-Free Guidance (CFG) [CFG can bring a slightly better results]
 
 **Training (add the following args into the training script of w/o CFG):**
@@ -282,7 +282,7 @@ Same with above
 ##### Model Checkpoint (Google Cloud): [TikTok Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_cfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_cfg/mp_rank_00_model_states.pt)
 
 
-
+<br><br/>
 #### 4. Possible issue for FVD metric reproduction
 
 Please first check the github issue and response [here](https://github.com/Wangt-CN/DisCo/issues/25#issuecomment-1716394151). We have validated the checkpoint results on A100 GPU. If you still cannot reproduce the results, please open an issue or send me the email.
