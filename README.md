@@ -111,7 +111,7 @@ We create a human image subset (700K Images) filtered from existing image corpus
 | -------- | :------------------: | :----------: | :----------: | :------: | :---------: |
 | **Size** |         20K          |     124K     |     276K     |   40K    |    240K     |
 
-The pre-processed pre-training data with the efficient TSV data format can be downloaded [**here (Google Cloud)**](https://console.cloud.google.com/storage/browser/disco-data-share) [within `Human_Attribute_Pretrain` folder].
+The pre-processed pre-training data with the efficient TSV data format can be downloaded [**here (Google Drive)**](https://drive.google.com/file/d/1N9gioWnkb3ZZytmT3Nzx4VjXjHxLsVB9/view?usp=sharing) [within `Human_Attribute_Pretrain` folder].
 
 ```
 Data Root
@@ -134,7 +134,7 @@ Data Root
 
 We use the [TikTok dataset](https://www.yasamin.page/hdnet_tiktok) for the fine-tuning. 
 
-We have already pre-processed the tiktok data with the efficient TSV format which can be downloaded **[here (Google Cloud)](https://console.cloud.google.com/storage/browser/disco-data-share)**. (Note that we only use the 1st frame of each TikTok video as the reference image.)
+We have already pre-processed the tiktok data with the efficient TSV format which can be downloaded **[here (Google Drive)](https://drive.google.com/file/d/1_b4naNB1QozGL-tKyHwSSYzTw8RIh5z3/view?usp=sharing)**. (Note that we only use the 1st frame of each TikTok video as the reference image.)
 
 The data folder structure should be like:
 
