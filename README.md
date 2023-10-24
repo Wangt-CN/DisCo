@@ -111,7 +111,7 @@ We create a human image subset (700K Images) filtered from existing image corpus
 | -------- | :------------------: | :----------: | :----------: | :------: | :---------: |
 | **Size** |         20K          |     124K     |     276K     |   40K    |    240K     |
 
-The pre-processed pre-training data with the efficient TSV data format can be downloaded [**here (Google Drive)**](https://drive.google.com/file/d/1N9gioWnkb3ZZytmT3Nzx4VjXjHxLsVB9/view?usp=sharing) [within `Human_Attribute_Pretrain` folder].
+The pre-processed pre-training data with the efficient TSV data format can be downloaded [**here (Google Drive)**](https://drive.google.com/file/d/1N9gioWnkb3ZZytmT3Nzx4VjXjHxLsVB9/view?usp=sharing).
 
 ```
 Data Root
@@ -250,6 +250,7 @@ For example,
 bash gen_eval.sh /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_check /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_check/pred_gs1.5_scale-cond1.0-ref1.0/
 ```
 
+You may need to download the [pre-trained vision model](https://drive.google.com/file/d/1J8w3fGj6H6kmcW9G8Ff6tRQofblaG5Vn/view?usp=sharing) and revise the path in `gen_eval.sh` for achieving fvd metric.
 
 ##### Model Checkpoint (Google Cloud): [TikTok Training Data]( https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_nocfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
 
