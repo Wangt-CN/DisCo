@@ -30,7 +30,7 @@
 
 #### Launch Demo Locally (Video dance generation demo is on the way!)
 
-1. Download the fine-tuning checkpoint model (our demo uses this [checkpoint](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt), you can also try the model with [cfg](https://github.com/Wangt-CN/DisCo/tree/main#model-checkpoint-google-cloud-tiktok-training-data-fid-fvd-188--more-tiktok-style-training-data-fid-fvd-157)), or can also use your own model; Download the [sd-image-variation](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) via `git clone https://huggingface.co/lambdalabs/sd-image-variations-diffusers`.
+1. Download the fine-tuning checkpoint [model](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft) (our demo uses this [checkpoint](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fnocfg), you can also use your own model); Download the [sd-image-variation](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) via `git clone https://huggingface.co/lambdalabs/sd-image-variations-diffusers`.
 
 2. Run the [jupyter notebook](https://github.com/Wangt-CN/DisCo/blob/main/human_img_edit_gradio.ipynb) file. All the required code/command are already set up. Remember to revise the pretrained model path `--pretrained_model` and `--pretrained_model_path (sd-va)` in `manual_args = [xxx]`.
 
@@ -177,7 +177,7 @@ AZFUSE_USE_FUSE=0 QD_USE_LINEIDX_8B=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetun
 
 
 
-**Pre-trained Model Checkpoint: [Google Cloud](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_pretrain/0.7m_pretrain/mp_rank_00_model_states.pt)**
+**Pre-trained Model Checkpoint: [Google Drive](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fpretrain)**
 
 <br><br/>
 
@@ -252,7 +252,7 @@ bash gen_eval.sh /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_
 
 You may need to download the [pre-trained vision model](https://drive.google.com/file/d/1J8w3fGj6H6kmcW9G8Ff6tRQofblaG5Vn/view?usp=sharing) and revise the path in `gen_eval.sh` for achieving fvd metric.
 
-##### Model Checkpoint (Google Cloud): [TikTok Training Data]( https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_nocfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_nocfg/mp_rank_00_model_states.pt)
+##### Model Checkpoint (Google Drive): [TikTok Training Data]( https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Ftiktok%5Fnocfg) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fnocfg)
 
 
 
@@ -280,14 +280,13 @@ Same with above
 
 
 
-##### Model Checkpoint (Google Cloud): [TikTok Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/tiktok_cfg/mp_rank_00_model_states.pt) | [More TikTok-Style Training Data](https://storage.googleapis.com/disco-checkpoint-share/checkpoint_ft/moretiktok_cfg/mp_rank_00_model_states.pt)
-
+##### Model Checkpoint (Google Drive): [TikTok Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Ftiktok%5Fcfg) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fcfg)
 
 <br><br/>
+
 #### 4. Possible issue for FVD metric reproduction
 
 Please first check the github issue and response [here](https://github.com/Wangt-CN/DisCo/issues/25#issuecomment-1716394151). We have validated the checkpoint results on A100 GPU. If you still cannot reproduce the results, please open an issue or send me the email.
-
 
 <br><br/>
 
