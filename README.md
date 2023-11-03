@@ -30,7 +30,7 @@
 
 #### Launch Demo Locally (Video dance generation demo is on the way!)
 
-1. Download the fine-tuning checkpoint [model](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft) (our demo uses this [checkpoint](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fnocfg), you can also use your own model); Download the [sd-image-variation](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) via `git clone https://huggingface.co/lambdalabs/sd-image-variations-diffusers`.
+1. Download the fine-tuning checkpoint [model](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft?csf=1&web=1&e=tKZkiR) (our demo uses this [checkpoint](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft/moretiktok_nocfg?csf=1&web=1&e=LFHl11), you can also use your own model); Download the [sd-image-variation](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) via `git clone https://huggingface.co/lambdalabs/sd-image-variations-diffusers`.
 
 2. Run the [jupyter notebook](https://github.com/Wangt-CN/DisCo/blob/main/human_img_edit_gradio.ipynb) file. All the required code/command are already set up. Remember to revise the pretrained model path `--pretrained_model` and `--pretrained_model_path (sd-va)` in `manual_args = [xxx]`.
 
@@ -177,7 +177,7 @@ AZFUSE_USE_FUSE=0 QD_USE_LINEIDX_8B=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetun
 
 
 
-**Pre-trained Model Checkpoint: [Google Drive](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fpretrain)**
+**Pre-trained Model Checkpoint: [OneDrive](https://entuedu-my.sharepoint.com/:f:/g/personal/tan317_e_ntu_edu_sg/EoH8KHplKPhGrIdKN6sPx_ABpurpPjNAvU3KdFgaPwNfJQ?e=bw6HVF)**
 
 <br><br/>
 
@@ -252,7 +252,7 @@ bash gen_eval.sh /home/kevintw/code/disco/github2/DisCo/save_results/TikTok_cfg_
 
 You may need to download the [pre-trained vision model](https://drive.google.com/file/d/1J8w3fGj6H6kmcW9G8Ff6tRQofblaG5Vn/view?usp=sharing) and revise the path in `gen_eval.sh` for achieving fvd metric.
 
-##### Model Checkpoint (Google Drive): [TikTok Training Data]( https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Ftiktok%5Fnocfg) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fnocfg)
+##### Model Checkpoint (OneDrive): [TikTok Training Data](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft/tiktok_nocfg?csf=1&web=1&e=2HdgdU) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft/moretiktok_nocfg?csf=1&web=1&e=2HDO7M)
 
 
 
@@ -280,7 +280,7 @@ Same with above
 
 
 
-##### Model Checkpoint (Google Drive): [TikTok Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Ftiktok%5Fcfg) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/personal/tan317_e_ntu_edu_sg/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Ftan317%5Fe%5Fntu%5Fedu%5Fsg%2FDocuments%2FPh%2ED%2D2%2Fintern%2Fmicrosoft%2Fwork2%2Fwebsite%2Fgithub%5Fpage%2Fupload%5Ffile%5Fonline%2Fpretrain%5Fmodel%2Fcheckpoint%5Fft%2Fmoretiktok%5Fcfg)
+##### Model Checkpoint (OneDrive): [TikTok Training Data](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft/tiktok_cfg?csf=1&web=1&e=wHT08O) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/:f:/r/personal/tan317_e_ntu_edu_sg/Documents/Ph.D-2/intern/microsoft/work2/website/github_page/upload_file_online/pretrain_model/checkpoint_ft/moretiktok_cfg?csf=1&web=1&e=8eVXTz)
 
 <br><br/>
 
