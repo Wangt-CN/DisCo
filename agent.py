@@ -426,24 +426,37 @@ class Agent():
             input_batch, enc_dec_only=enc_dec_only)
         return output_image
 
-    def eval_fn(self, eval_loader, inner_collect_fn=None,
-                use_tqdm=True, compute_fid=True, enc_dec_only=False, train_eval_input=None):
+    def eval_fn(
+        self,
+        eval_loader,
+        inner_collect_fn=None,
+        use_tqdm=True,
+        compute_fid=True,
+        enc_dec_only=False,
+        train_eval_input=None,
+    ):
         # TODO Note that eval_fn supports ddp. So we do not need to unwrap things here.
         self.model.eval()
         eval_meter = Meter()
         eval_timer = Timer()
         eval_save_filename = self.args.eval_save_filename
         if enc_dec_only:
-            eval_save_filename += '_enc_dec_only'
+            eval_save_filename += "_enc_dec_only"
         with T.no_grad():
-            eval_loader = tqdm(eval_loader, total=len(eval_loader)) if use_tqdm else eval_loader
+            eval_loader = (
+                tqdm(eval_loader, total=len(eval_loader)) if use_tqdm else eval_loader
+            )
             for batch_idx, inputs in enumerate(eval_loader):
                 T.cuda.empty_cache()
                 if enc_dec_only:
-                    inputs['enc_dec_only'] = True
+                    inputs["enc_dec_only"] = True
                 inputs = self.prepare_batch(inputs)
                 outputs = self.forward_step(inputs)
-                metric_and_loss = {k: v for k, v in outputs.items() if k.split('_')[0] in ['metric', 'loss']}
+                metric_and_loss = {
+                    k: v
+                    for k, v in outputs.items()
+                    if k.split("_")[0] in ["metric", "loss"]
+                }
 
                 for k, v in metric_and_loss.items():
                     metric_and_loss[k] = self.reduce_mean(v)
@@ -452,36 +465,62 @@ class Agent():
                 if inner_collect_fn and self.enable_collect:
                     remove_key = inputs.pop("enc_dec_only", None)
                     gt_save_path, pred_save_path = inner_collect_fn(
-                        self.args, inputs, outputs, self.log_dir,
-                        self.global_step, eval_save_filename)
+                        self.args,
+                        inputs,
+                        outputs,
+                        self.log_dir,
+                        self.global_step,
+                        eval_save_filename,
+                    )
 
                 if batch_idx == 0:
                     inputs = defaultdict(lambda: None, inputs)
-                    label_imgs = inputs['label_imgs']
-                    cond_imgs = inputs['cond_imgs']
-                    ref_imgs = inputs['reference_img']
-                    pred_imgs = outputs['logits_imgs']
-                    self.log_img_to_wandb(label_imgs, cond_imgs, ref_imgs, pred_imgs, prefix='val')
+                    try:
+                        label_imgs = inputs["label_imgs"]
+                        cond_imgs = inputs["cond_imgs"]
+                        ref_imgs = inputs["reference_img"]
+                        pred_imgs = outputs["logits_imgs"]
+                    except:  # for video model
+                        label_imgs = inputs["label_img_seq"][:, :, 0]
+                        cond_imgs = inputs["cond_img_seq"][:, :, 0]
+                        ref_imgs = inputs["reference_img"]
+                        pred_imgs = outputs["logits_img_seq"][:, :, 0]
+                    self.log_img_to_wandb(
+                        label_imgs, cond_imgs, ref_imgs, pred_imgs, prefix="val"
+                    )
 
-            if train_eval_input: # run a simple-round training sample to check if it is over-fitting
-                print('run a single-round training sample inference to check if over-fitting')
+            if (
+                train_eval_input
+            ):  # run a simple-round training sample to check if it is over-fitting
+                print(
+                    "run a single-round training sample inference to check if over-fitting"
+                )
                 inputs = train_eval_input
                 T.cuda.empty_cache()
                 if enc_dec_only:
-                    inputs['enc_dec_only'] = True
+                    inputs["enc_dec_only"] = True
                 inputs = self.prepare_batch(inputs)
                 outputs = self.forward_step(inputs)
 
                 ### vis image for training single round sample ###
                 inputs = defaultdict(lambda: None, inputs)
-                label_imgs = inputs['label_imgs']
-                cond_imgs = inputs['cond_imgs']
-                ref_imgs = inputs['reference_img']
-                pred_imgs = outputs['logits_imgs']
-                self.log_img_to_wandb(label_imgs, cond_imgs, ref_imgs, pred_imgs, prefix='train')
+                try:
+                    label_imgs = inputs["label_imgs"]
+                    cond_imgs = inputs["cond_imgs"]
+                    ref_imgs = inputs["reference_img"]
+                    pred_imgs = outputs["logits_imgs"]
+                except:  # for video model
+                    label_imgs = inputs["label_img_seq"][:, :, 0]
+                    cond_imgs = inputs["cond_img_seq"][:, :, 0]
+                    ref_imgs = inputs["reference_img"]
+                    pred_imgs = outputs["logits_img_seq"][:, :, 0]
+                self.log_img_to_wandb(
+                    label_imgs, cond_imgs, ref_imgs, pred_imgs, prefix="train"
+                )
 
-
-        eval_meter = self.get_eval_metrics(eval_meter, eval_save_filename, gt_save_path, pred_save_path)
+        eval_meter = self.get_eval_metrics(
+            eval_meter, eval_save_filename, gt_save_path, pred_save_path
+        )
         eval_time = eval_timer.elapse(True)
 
         self.model.train()

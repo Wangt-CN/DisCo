@@ -83,12 +83,10 @@ def main_worker(args):
     dataset_cf = import_filename(args.dataset_cf)
     BaseDataset = dataset_cf.BaseDataset
 
-    # args = update_args(parsed_args, args)
-
+    print(f"Args: {edict(sorted(vars(args).items()))}")
     # init models
     logger.info('Building models...')
     model = Net(args)
-    print(f"Args: {edict(vars(args))}")
     if args.do_train:
         logger.warning("Do training...")
         # Prepare Dataset.

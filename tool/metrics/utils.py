@@ -352,7 +352,7 @@ class DatasetFVDVideoResize(torch.utils.data.Dataset):
     fn_resize: function that takes an np_array as input [0,255]
     """
 
-    def __init__(self, files, sample_duration=16, mode='FVD-3DRN50', img_size=112):
+    def __init__(self, files, sample_duration=16, mode='FVD-3DRN50', img_size=112, return_name=False):
         self.files = files
 
         self.pixel_mean = torch.as_tensor(np.array([114.7748, 107.7354, 99.4750]))
@@ -360,6 +360,7 @@ class DatasetFVDVideoResize(torch.utils.data.Dataset):
         self.sample_duration = sample_duration
         self.mode = mode
         self.resize_func = make_resizer("PIL", False, "bicubic", (img_size, img_size))
+        self.return_name = return_name
  
     def __len__(self):
         return len(self.files)
@@ -415,6 +416,8 @@ class DatasetFVDVideoResize(torch.utils.data.Dataset):
                 video = video / 127.5 - 1
                 video = video.unsqueeze(0).permute(0, 4, 1, 2, 3).float()  # num_seg, 3, sample_during h, w
 
+            if self.return_name:
+                return video, Path(path).stem
             return video
         except Exception as e:
             print(f'{i} skipped beacase {e}')
@@ -430,9 +433,11 @@ class DatasetFVDVideoFromFramesResize(torch.utils.data.Dataset):
     fn_resize: function that takes an np_array as input [0,255]
     """
 
-    def __init__(self, files, sample_duration=16, mode='FVD-3DRN50', img_size=112):
+    def __init__(self, files, sample_duration=16, mode='FVD-3DRN50', img_size=112, return_name=False):
         frame_format1 = r"^(TiktokDance_\d+_)(\d+)(\D*\.\w+)$"
         frame_format2 = r"^(TiktokDance_\d+_\d+_1x1_)(\d+)(\D*\.\w+)$"
+        frame_format3 = r"^(\d+_\d+_1x1__)(\d+)(.\D*\.\w+)$"
+        frame_format4 = r"^(S\d{3}C\d{3}P\d{3}R\d{3}A\d{3}_)(\d{4})(\D*\.\w+)$"
 
         # self.files = files
         files = sorted(files)
@@ -444,6 +449,10 @@ class DatasetFVDVideoFromFramesResize(torch.utils.data.Dataset):
                 folder_format_re = frame_format1
             elif re.match(frame_format2, file_name):
                 folder_format_re = frame_format2
+            elif re.match(frame_format3, file_name):
+                folder_format_re = frame_format3
+            elif re.match(frame_format4, file_name):
+                folder_format_re = frame_format4
             else:
                 print(f"Frame name '{file_name}' does not match any format")
                 continue
@@ -464,6 +473,7 @@ class DatasetFVDVideoFromFramesResize(torch.utils.data.Dataset):
         self.img_size = img_size
         self.sample_duration = sample_duration
         self.mode = mode
+        self.return_name = return_name
         self.resize_func = make_resizer("PIL", False, "bicubic", (img_size, img_size))
  
     def __len__(self):
@@ -503,6 +513,8 @@ class DatasetFVDVideoFromFramesResize(torch.utils.data.Dataset):
                 video = video / 127.5 - 1
                 video = video.unsqueeze(0).permute(0, 4, 1, 2, 3).float()  # num_seg, 3, sample_during h, w
 
+            if self.return_name:
+                return video, Path(video_name).stem
             return video
         except Exception as e:
             print(f'{i} skipped beacase {e}')

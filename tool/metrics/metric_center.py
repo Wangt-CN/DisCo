@@ -550,15 +550,19 @@ def compute_fid_video_scores(gen_inst_name_full, gt_inst_name_full, feat_model, 
         raise NotImplementedError
     
     if Path(gen_inst_name_full[0]).suffix in [".mp4", ".gif"]:
+        print("Using raw video gen dataset for FVD computation, first file suffix: ", Path(gen_inst_name_full[0]).suffix)
         dataset_gen = DatasetFVDVideoResize(gen_inst_name_full, sample_duration, mode, sample_size)
     else:
+        print("Using frame gen dataset for FVD computation, first file suffix: ", Path(gen_inst_name_full[0]).suffix)
         dataset_gen = DatasetFVDVideoFromFramesResize(gen_inst_name_full, sample_duration, mode, sample_size)
 
     np_feats_gen = compute_3d_video_prediction(dataset_gen, feat_model, batch_size=batch_size, num_workers=num_workers)
 
     if Path(gt_inst_name_full[0]).suffix in [".mp4", ".gif"]:
+        print("Using raw video gt dataset for FVD computation, first file suffix: ", Path(gt_inst_name_full[0]).suffix)
         dataset_gt = DatasetFVDVideoResize(gt_inst_name_full, sample_duration, mode, sample_size)
     else:
+        print("Using frame gt dataset for FVD computation, first file suffix: ", Path(gt_inst_name_full[0]).suffix)
         dataset_gt = DatasetFVDVideoFromFramesResize(gt_inst_name_full, sample_duration, mode, sample_size)
 
     np_feats_gt = compute_3d_video_prediction(dataset_gt, feat_model, batch_size=batch_size, num_workers=num_workers)
@@ -568,6 +572,49 @@ def compute_fid_video_scores(gen_inst_name_full, gt_inst_name_full, feat_model, 
         fid_score = fid_from_feats(feats1=np_feats_gen, feats2=np_feats_gt)
 
     return fid_score
+
+
+def compute_dtssd_video_scores(gen_inst_name_full, gt_inst_name_full, sample_duration):
+    sample_size = 256
+    
+    if Path(gen_inst_name_full[0]).suffix in [".jpg", ".png"]:
+        print("Using frame gen dataset for dtssd computation, first file suffix: ", Path(gen_inst_name_full[0]).suffix)
+        dataset_gen = DatasetFVDVideoFromFramesResize(gen_inst_name_full, 2, None, sample_size, return_name=True)
+    else:
+        print("Using raw video gen dataset for dtssd computation, first file suffix: ", Path(gen_inst_name_full[0]).suffix)
+        dataset_gen = DatasetFVDVideoResize(gen_inst_name_full, sample_duration, None, sample_size, return_name=True)
+
+    if Path(gt_inst_name_full[0]).suffix in [".jpg", ".png"]:
+        print("Using frame gt dataset for dtssd computation, first file suffix: ", Path(gt_inst_name_full[0]).suffix)
+        dataset_gt = DatasetFVDVideoFromFramesResize(gt_inst_name_full, 2, None, sample_size, return_name=True)
+    else:
+        print("Using raw video gt dataset for dtssd computation, first file suffix: ", Path(gt_inst_name_full[0]).suffix)
+        dataset_gt = DatasetFVDVideoResize(gt_inst_name_full, sample_duration, None, sample_size, return_name=True)
+
+    dtssd_list = []
+    cnt = 0
+    print("length of dataset_gen: ", len(dataset_gen), "length of dataset_gt: ", len(dataset_gt))
+    pbar = tqdm(zip(dataset_gen, dataset_gt), desc="computing dtssd", total=len(dataset_gen))
+    for (gen_video_tuple, gt_video_tuple) in pbar:
+        gen_video, gen_name = gen_video_tuple
+        gt_video, gt_name = gt_video_tuple
+        if gen_name != gt_name:
+            print(f"gen_name: {gen_name}, gt_name: {gt_name} failed to compute dtssd")
+            break
+        else:
+            pbar.set_description(f"computing dtssd for {gen_name} and {gt_name}")
+
+        gen_diff = gen_video[1] - gen_video[0]
+        gt_diff = gt_video[1] - gt_video[0]
+
+        dtssd = ((gen_diff - gt_diff) ** 2).mean()
+        dtssd_list.append(dtssd.item())
+        cnt += 1
+    
+    print("compute dtssd over {} videos".format(cnt))
+    dtssd = np.mean(np.array(dtssd_list))
+    return dtssd
+
 
 def evaluation_visual_creation(
         gen_inst_names_full, batch_size, num_workers,
@@ -670,6 +717,11 @@ def evaluation_visual_creation(
 
         print(f"The {metric} {lpips_score}")
         return {metric: lpips_score}
+    elif metric == "dtSSD":
+        print(f'start evluation {metric} over {len(gen_inst_names_full)} generated Image/Video and {len(gt_inst_names_full)} gt Image/Video')
+        dtssd_score = compute_dtssd_video_scores(gen_inst_names_full, gt_inst_names_full, sample_duration=sample_duration)
+        print(f"The {metric} {dtssd_score}")
+        return {metric: dtssd_score}
     else:
         print("we are not support the metric you specified, please contact me")
         raise NotImplementedError 
@@ -688,13 +740,13 @@ def get_all_eval_scores(
     gen_inst_names_v, gt_inst_names_v = [], []
     gen_inst_names_i, gt_inst_names_i = [], []
     res_all = {}
-    type2metric = {'fid-img': 'FID-Img', 'fid': 'FID', 'mae': 'MAE', 
+    type2metric = {'fid-img': 'FID-Img', 'fid': 'FID', 'mae': 'MAE', "dtssd": "dtSSD",
                     'fid-vid': "FVD-3DRN50", 'fvd': "FVD-3DInception", 'is': 'IS', 
                     'l1': 'L1', 'ssim': 'SSIM', 'lpips': 'LPIPS', 'psnr': 'PSNR'}
     empty_gen_folder_v, empty_gt_folder_v = False, False
     empty_gen_folder_i, empty_gt_folder_i = False, False
     for type in metrics:
-        if type in ['fid-img', 'fvd', 'fid-vid', 'MAE']:
+        if type.lower() in ['fid-img', 'fvd', 'fid-vid', 'mae', "dtssd"]:
             if empty_gen_folder_v or empty_gt_folder_v:
                 print(f"Empty gen/gt folder {path_gen}, {path_gt}")
                 break
@@ -720,7 +772,7 @@ def get_all_eval_scores(
                     gt_inst_names_full_v = []
                     for gt_name in tqdm(gt_inst_names_v, desc=f'load_gt for {metrics}'):
                         gt_inst_names_full_v.append(osp.join(path_gt, gt_name))
-        elif type in ['fid', 'is', 'ssim', 'l1', 'lpips', 'psnr']:
+        elif type.lower() in ['fid', 'is', 'ssim', 'l1', 'lpips', 'psnr']:
             if empty_gen_folder_i or empty_gt_folder_i:
                 break
             if len(gen_inst_names_i) == 0:
@@ -795,7 +847,7 @@ def get_all_eval_scores(
         # gaussian_blur_kernel = 0 means that we do not blur the images, FID-1, FID-2, ..., FID-K, you can change it.
         # batch_size, the default value is 128, which is acceptable, you can scale it up.
         #  is_sample_frame, if False, we calcuate all frames decoded from videos. num_sample_frames, the parameters you need to specify when you want to sample frames from video
-        elif type in ['fid-img', 'fid-vid', 'fvd', 'mae']:
+        elif type in ['fid-img', 'fid-vid', 'fvd', 'mae', "dtssd"]:
             if empty_gen_folder_v or empty_gt_folder_v:
                 print(f"Empty gen/gt folder {path_gen}, {path_gt}")
                 break

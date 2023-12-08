@@ -161,7 +161,7 @@ class Args(object):
         parser.add_argument("--drop_text", default=1.0, type=float, # drop text only activate in args.null_caption
                             help="prob to drop text")
         # Note that tbs/ebs is the Global batch size = GPU_PER_NODE * NODE_COUNT * LOCAL_BATCH_SIZE
-        parser.add_argument('--local_train_batch_size', default=1,  type=int)
+        parser.add_argument('--local_train_batch_size', default=1, type=int)
         parser.add_argument('--epochs', default=10, type=int)
         parser.add_argument('--eval_step', default=5, type=float)
         parser.add_argument('--save_step', default=5, type=float)
@@ -177,14 +177,11 @@ class Args(object):
         parser.add_argument('--controlnet_conditioning_scale_cond', default=1.0, type=float)
         parser.add_argument('--controlnet_conditioning_scale_ref', default=1.0, type=float)
 
-        # parser.add_argument(
-        #     "--img_transform", default=["img_rand_crop"], type=str,
-        #     nargs='+',
-        #     choices=["pad_resize", "img_rand_crop",
-        #              "vid_rand_crop", "img_center_crop"],
-        #     required=False, help="img transform")
-        # parser.add_argument('--logging_steps', type=int, default=20,
-        #                     help="log memory usage per X steps")
+        ### for temporal disco
+        parser.add_argument("--nframes", type=int, default=8, help="the number of frames for synthesis")
+        parser.add_argument("--frame_interval", type=int, default=1, help="frame interval for synthesis")
+        parser.add_argument("--eval_sample_interval", type=float, default=1, help="eval interval for fast evalaution, only valid for video datasets")
+        parser.add_argument("--train_sample_interval", type=float, default=1, help="train interval for fast training") 
         
         ### reference image attention
         parser.add_argument("--unet_unfreeze_type", default=None,  type=str, # if set --freeze_unet=False, will ft all the unet

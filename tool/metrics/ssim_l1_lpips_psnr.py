@@ -37,7 +37,7 @@ def l1_eval(imageA, imageB):
 
 def compute_ssim_l1_psnr(gen_inst_name_full, gt_inst_name_full, mode):
     gen_inst_name_full = sorted(gen_inst_name_full)
-    gt_inst_name_full =sorted(gt_inst_name_full)
+    gt_inst_name_full = sorted(gt_inst_name_full)
 
     scores = []
     for gen_path, gt_path in tqdm(zip(gen_inst_name_full, gt_inst_name_full)):   
@@ -46,10 +46,20 @@ def compute_ssim_l1_psnr(gen_inst_name_full, gt_inst_name_full, mode):
         gt_filename = os.path.splitext(
                 os.path.basename(gt_path))[0]
 
-        assert gen_filename == gt_filename, 'file mismatch'
+        assert gen_filename == gt_filename, f"file mismatch: {gen_filename} vs {gt_filename}"
 
         image1 = cv2.imread(gen_path)
         image2 = cv2.imread(gt_path)
+        if image1 is None:
+            print(f"Failed to load image from {gen_path}")
+            # Check if gen_path is a symlink
+            if os.path.islink(gen_path):
+                target_path = os.readlink(gen_path)
+                print(f"The symbolic link {gen_path} points to {target_path}")
+            else:
+                print(f"{gen_path} is not a symbolic link.")
+            return None
+
         # Resize images to the same dimensions, if needed
         if image1.shape != image2.shape:
             image1 = cv2.resize(image1, (image2.shape[1], image2.shape[0]))
@@ -73,7 +83,7 @@ def compute_ssim_l1_psnr(gen_inst_name_full, gt_inst_name_full, mode):
 
 def compute_lpips(gen_inst_name_full, gt_inst_name_full):
     gen_inst_name_full = sorted(gen_inst_name_full)
-    gt_inst_name_full =sorted(gt_inst_name_full)
+    gt_inst_name_full = sorted(gt_inst_name_full)
     convert_tensor = transforms.ToTensor()
     loss_fn_vgg = lpips.LPIPS(net='vgg')
 
