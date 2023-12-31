@@ -1,18 +1,17 @@
 # DisCo: Disentangled Control for Realistic Human Dance Generation
 
-<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2307.00040'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://b9652ca65fb3fab63a.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/alJKsj3JpBo)
+<a href='https://disco-dance.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2307.00040'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://b9652ca65fb3fab63a.gradio.live/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dErsSwSEdcAyP6V_mqayW0qdPuoHSz-j?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://youtu.be/D_mPPjUCDjE) <a href='https://drive.google.com/file/d/1AlN3Thg46RlH5uhLK-ZAIivo-C8IJeif/view?usp=sharing/'><img src='https://img.shields.io/badge/Slides-GoogleDrive-yellow'></a>
 
 [Tan Wang*](https://wangt-cn.github.io/),  [Linjie Li*](https://scholar.google.com/citations?user=WR875gYAAAAJ&hl=en),  [Kevin Lin*](https://scholar.google.com/citations?hl=en&user=LKSy1kwAAAAJ),  [Yuanhao Zhai](https://www.yhzhai.com/), [Chung-Ching Lin](https://scholar.google.com/citations?hl=en&user=legkbM0AAAAJ),  [Zhengyuan Yang](https://scholar.google.com/citations?hl=en&user=rP02ve8AAAAJ),  [Hanwang Zhang](https://scholar.google.com/citations?hl=en&user=YG0DFyYAAAAJ),  [Zicheng Liu](https://scholar.google.com/citations?hl=en&user=bkALdvsAAAAJ),  [Lijuan Wang](https://scholar.google.com/citations?hl=en&user=cDcWXuIAAAAJ)
 
 **Nanyang Technological University  &nbsp; | &nbsp;  Microsoft Azure AI &nbsp; |&nbsp;  University at Buffalo**
 
-[![DisCo: Disentangled Control for Referring Human Dance Generation in Real World](https://res.cloudinary.com/marcomontalbano/image/upload/v1686644061/video_to_markdown/images/youtube--alJKsj3JpBo-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/alJKsj3JpBo "DisCo: Disentangled Control for Referring Human Dance Generation in Real World")
-
-
+[![DisCo: Disentangled Control for Referring Human Dance Generation in Real World](https://res.cloudinary.com/marcomontalbano/image/upload/v1704004581/video_to_markdown/images/youtube--D_mPPjUCDjE-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/D_mPPjUCDjE "DisCo: Disentangled Control for Referring Human Dance Generation in Real World")
 
 <br><br/>
 
 ## :fire: News
+* **[2023.12.30]** Update [slides](https://drive.google.com/file/d/1AlN3Thg46RlH5uhLK-ZAIivo-C8IJeif/view?usp=sharing) about introducing DisCo and summarizing recent works.
 * **[2023.11.30]** Update DisCo w/ temporal module.
 * **[2023.10.12]** Update the new ArXiv version of DisCo (Add temporal module; Synchronize FVD computation with MCVD; More baselines and visualizations, etc)
 * **[2023.07.21]** Update the [construction guide](https://github.com/Wangt-CN/DisCo/blob/main/PREPRO.md) of the TSV file.
@@ -25,6 +24,22 @@
 * **[2023.06.21]** Release the code for [general fine-tuning](https://github.com/Wangt-CN/DisCo#fine-tuning-with-disentangled-control).
 * **[2023.06.21]** We release the human attribute pre-trained checkpoint and the fine-tuning checkpoint.
 
+
+
+
+
+##### Other following projects you may find interesting:
+
+
+* [Animate Anyone](https://arxiv.org/abs/2311.17117), from Alibaba
+* [MagicAnimate](https://arxiv.org/abs/2311.16498), from TikTok
+* [MagicDance](https://arxiv.org/abs/2311.12052), from TikTok
+
+
+##### Comparison of recent works:
+<p align="center">
+  <img src="figures/compare.png" width="90%" height="80%">
+</p>
 <br><br/>
 
 ## 🎨 Gradio Demo 
@@ -383,8 +398,8 @@ If you use our work in your research, please cite:
 
 ```
 @article{wang2023disco,
-  title={DisCo: Disentangled Control for Referring Human Dance Generation in Real World},
-  author={Wang, Tan and Li, Linjie and Lin, Kevin and Zhai, Yuanhao and Lin, Chung-Ching and Yang, Zhengyuan and Zhang, Hanwang and Liu, Zicheng and Wang, Lijuan},
+  title={Disco: Disentangled control for referring human dance generation in real world},
+  author={Wang, Tan and Li, Linjie and Lin, Kevin and Lin, Chung-Ching and Yang, Zhengyuan and Zhang, Hanwang and Liu, Zicheng and Wang, Lijuan},
   journal={arXiv preprint arXiv:2307.00040},
   website={https://disco-dance.github.io/},
   year={2023}
