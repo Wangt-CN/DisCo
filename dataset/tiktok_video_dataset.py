@@ -293,7 +293,7 @@ class BaseDataset(TsvCondImgCompositeDataset):
             idx = int(idx * self.train_sample_interval)
             idx = idx + random.randint(0, self.train_sample_interval - 1)
             idx = min(idx, len(self) - 1)
-        elif self.split == "eval":
+        elif self.split == "val":
             idx = int(idx * self.eval_sample_interval)
 
         raw_data = self.get_metadata(idx)
