@@ -399,7 +399,7 @@ If you use our work in your research, please cite:
 ```
 @article{wang2023disco,
   title={Disco: Disentangled control for referring human dance generation in real world},
-  author={Wang, Tan and Li, Linjie and Lin, Kevin and Lin, Chung-Ching and Yang, Zhengyuan and Zhang, Hanwang and Liu, Zicheng and Wang, Lijuan},
+  author={Wang, Tan and Li, Linjie and Lin, Kevin and Zhai, Yuanhao and Lin, Chung-Ching and Yang, Zhengyuan and Zhang, Hanwang and Liu, Zicheng and Wang, Lijuan},
   journal={arXiv preprint arXiv:2307.00040},
   website={https://disco-dance.github.io/},
   year={2023}
