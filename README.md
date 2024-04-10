@@ -11,6 +11,7 @@
 <br><br/>
 
 ## :fire: News
+* **[2024.04.08]** DisCo has been accepted by CVPR24. Please check the latest version of paper on [ArXiv](https://arxiv.org/abs/2307.00040).
 * **[2023.12.30]** Update [slides](https://drive.google.com/file/d/1AlN3Thg46RlH5uhLK-ZAIivo-C8IJeif/view?usp=sharing) about introducing DisCo and summarizing recent works.
 * **[2023.11.30]** Update DisCo w/ temporal module.
 * **[2023.10.12]** Update the new ArXiv version of DisCo (Add temporal module; Synchronize FVD computation with MCVD; More baselines and visualizations, etc)
@@ -225,7 +226,7 @@ Download the `sd-image-variations-diffusers` from official [diffusers repo](http
 [*To employ **multiple GPU running**, try to add `mpirun -np {GPU NUM}` before the `python`.]
 
 ```shell
-AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf config/ref_attn_clip_combine_controlnet/tiktok_S256L16_xformers_tsv.py \
+WANDB_ENABLE=0 AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 mpirun -np 8 python finetune_sdm_yaml.py --cf config/ref_attn_clip_combine_controlnet/tiktok_S256L16_xformers_tsv.py \
 --do_train --root_dir /home1/wangtan/code/ms_internship2/github_repo/run_test \
 --local_train_batch_size 32 \
 --local_eval_batch_size 32 \
@@ -237,6 +238,7 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf c
 --train_yaml /home/wangtan/data/disco/yaml_file/train_TiktokDance-poses-masks.yaml \
 --val_yaml /home/wangtan/data/disco/yaml_file/new10val_TiktokDance-poses-masks.yaml \
 --unet_unfreeze_type "all" \
+--guidance_scale 3 \
 --refer_sdvae \
 --ref_null_caption False \
 --combine_clip_local --combine_use_mask \
@@ -300,6 +302,8 @@ Same with above
 
 ##### Model Checkpoint (OneDrive): [TikTok Training Data](https://entuedu-my.sharepoint.com/:f:/g/personal/tan317_e_ntu_edu_sg/EpJSOWGzrnlNn99nC691G8wBF-JnbuYCbgbHMRg6TQFAxg?e=QUJJOL) | [More TikTok-Style Training Data](https://entuedu-my.sharepoint.com/:f:/g/personal/tan317_e_ntu_edu_sg/EiDYzx84T8pMhrDtcoIU5w0By9ysDotKzmezShKkX8aE4g?e=zzLuEA)
 
+
+<br><br/>
 #### 4. Temporal module fine-tuning
 **Training:**
 After training the image DisCo model, we further incorporate temporal convolutional layers and temporal attention layers to improve the temporal smoothness. Note that the content for argument `--pretrained_model` should be the image DisCo model checkpoint, instead of stage 1 pre-trained checkpoint.
@@ -327,13 +331,13 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py --cf c
 ```
 
 **Evaluation:**
-Simply replace the previous `gen_eval.sh` script with the `gen_eval_tm.sh` script, as follows.
+Simply replace the previous `gen_eval.sh` script with the `gen_eval_tm.sh` script, as follows. GT folder path will be filled in automatically.
 
 ```shell
 bash gen_eval_tm.sh {exp_dir_path} {exp_dir_path}/{prediction_folder_name}
 ```
 
-##### Model checkpoint (coming very soon): TikTok training data (w/o CFG) | TikTok training data (w/ CFG) | More TikTok-Style Training Data (w/ CFG)
+##### Model checkpoint: [TikTok training data (w/ CFG)](https://entuedu-my.sharepoint.com/:f:/g/personal/tan317_e_ntu_edu_sg/Er5Ch49FzUdHpfBiZy3uN3cB87Zq8g4c9idEEzESdEy0qg?e=R3W7ij) | [More TikTok-Style Training Data (w/ CFG)](https://entuedu-my.sharepoint.com/:f:/g/personal/tan317_e_ntu_edu_sg/Evp1AG1ExZBIni78RIH2bMUBmg-orFvvIAPcfnGQ_lCZGQ?e=nTr0ci)
 
 <br><br/>
 
@@ -376,6 +380,20 @@ AZFUSE_USE_FUSE=0 NCCL_ASYNC_ERROR_HANDLING=0 python finetune_sdm_yaml.py \
 --ft_iters 500 --ft_one_ref_image False --ft_idx dataset/folder/name --strong_aug_stage1 True --strong_rand_stage2 True
 ```
 
+<br><br/>
+## Notes
+
+#### 1. Possible issue for FVD metric reproduction
+
+Please first check the github issue and response [here](https://github.com/Wangt-CN/DisCo/issues/25#issuecomment-1716394151). We have validated the checkpoint results on A100 GPU. If you still cannot reproduce the results, please open an issue or send me the email.
+
+#### 2. PSNR metric
+
+We thank @Delicious-Bitter-Melon for for highlighting a potential numerical overflow issue in the implementation of the PSNR metric. This issue has been resolved in codebase, and the updated score is reflected in our latest version. It's important to note that this correction does not alter the trend or affect the overall conclusions.
+
+#### 3. DisCo is not limited to upper-human.
+
+Please check our latest paper for its generalizability. It can be easily achieved by incorporating extensive image scaling augmentations during the training phase.
 
 
 <br><br/>
@@ -398,10 +416,9 @@ If you use our work in your research, please cite:
 
 ```
 @article{wang2023disco,
-  title={Disco: Disentangled control for referring human dance generation in real world},
+  title={Disco: Disentangled control for realistic human dance generation},
   author={Wang, Tan and Li, Linjie and Lin, Kevin and Zhai, Yuanhao and Lin, Chung-Ching and Yang, Zhengyuan and Zhang, Hanwang and Liu, Zicheng and Wang, Lijuan},
   journal={arXiv preprint arXiv:2307.00040},
-  website={https://disco-dance.github.io/},
   year={2023}
 }
 ```

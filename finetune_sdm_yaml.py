@@ -107,11 +107,7 @@ def main_worker(args):
         
         args.eval_step = int(max(10, args.eval_step))
         args.save_step = int(max(10, args.save_step))
-        # if args.deepspeed:
-        #     # from deepspeed.ops.adm import FusedAdam as Adam
-        #     from deepspeed.ops.adam import DeepSpeedCPUAdam as Adam
-        #     optimizer = Adam(model.parameters(), lr=args.learning_rate, betas=(0.9, 0.98), weight_decay=1e-3)
-        # else:
+
         from torch.optim import AdamW 
         optimizer = AdamW(model.parameters(), lr=args.learning_rate, betas=(0.9, 0.98), weight_decay=args.decay)
         optimizer = getattr(model, 'optimizer', optimizer)
@@ -172,36 +168,7 @@ def main_worker(args):
         trainer.eval(eval_dataloader, inner_collect_fn=inner_collect_fn,
                      enc_dec_only='enc_dec_only' in args.eval_save_filename)
 
-    # if args.eval_visu_demo:
-    #     logger.warning("Do eval_visu with Gradio demo...")
-    #     if getattr(args, 'refer_clip_preprocess', None):
-    #         eval_dataset = BaseDataset(args, args.val_yaml, split='val', preprocesser=model.feature_extractor)
-    #     else:
-    #         eval_dataset = BaseDataset(args, args.val_yaml, split='val')
-    #     eval_dataloader, eval_info = make_data_loader(
-    #         args, args.local_eval_batch_size,
-    #         eval_dataset)
-
-    #     trainer = Agent_LDM(args=args, model=model)
-
-    #     fg_path = '/home1/wangtan/code/ms_internship2/github_repo/DisControl_App/demo_file/fg/masked_images/00335.png'
-    #     bg_path = '/home1/wangtan/code/ms_internship2/github_repo/DisControl_App/demo_file/bg/masked_images/00277.png'
-    #     pose_path = '/home1/wangtan/code/ms_internship2/github_repo/DisControl_App/demo_file/pose/0264.png'
-
-    #     reference_img = eval_dataset.load_image(fg_path)
-    #     ref_bg_image = eval_dataset.load_image(bg_path)
-    #     skeleton_img = eval_dataset.load_image(pose_path)
-
-    #     input_data = [reference_img, ref_bg_image, skeleton_img]
-    #     trainer.eval_demo_pre()
-    #     output_image = trainer.eval_demo_run_masked(input_data, eval_dataset=eval_dataset,
-    #                  enc_dec_only='enc_dec_only' in args.eval_save_filename)
-
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser = add_custom_arguments(parser)
-    # parsed_args = parser.parse_args()
-    # main_worker(parsed_args)
     from utils.args import sharedArgs
     parsed_args = sharedArgs.parse_args()
     main_worker(parsed_args)

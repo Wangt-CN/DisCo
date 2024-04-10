@@ -10,7 +10,8 @@ from math import log10, sqrt
   
 
 def psnr_eval(original, compressed):
-    mse = np.mean((original - compressed) ** 2)
+
+    mse = np.mean((original.astype(np.float64) - compressed.astype(np.float64)) ** 2)
     if(mse == 0):  # MSE is zero means no noise is present in the signal .
                   # Therefore PSNR have no importance.
         return 100
