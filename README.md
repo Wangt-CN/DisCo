@@ -11,6 +11,7 @@
 <br><br/>
 
 ## :fire: News
+* **[2024.07.15]** We present [IDOL](https://yhzhai.github.io/idol/), an enhancement of DisCo that simultaneously generates video and depth, enabling realistic 2.5D video synthesis.
 * **[2024.04.08]** DisCo has been accepted by CVPR24. Please check the latest version of paper on [ArXiv](https://arxiv.org/abs/2307.00040).
 * **[2023.12.30]** Update [slides](https://drive.google.com/file/d/1AlN3Thg46RlH5uhLK-ZAIivo-C8IJeif/view?usp=sharing) about introducing DisCo and summarizing recent works.
 * **[2023.11.30]** Update DisCo w/ temporal module.
